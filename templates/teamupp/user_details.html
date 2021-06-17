@@ -1,0 +1,56 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    {{ object.name | title }} Details
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    <div align="center">
+        <div class="profile-photos">
+            <img src="{{ object.profile_picture_url }}&size=200" />
+        </div>
+        <div>
+            <h4 id="username-and-aka-name">
+                <span id="username">
+                {{ object.username }}
+                </span>
+                <small id="aka-name">
+                    {% if aka_name %}
+                        (AKA The {{ aka_name }})
+                    {% endif %}
+                </small>
+            </h4>
+        </div>
+        <h5><a id="company-name" href="{% url 'teamupp:company-details'  pk=object.company.pk %}">{{ object.company }}</a></h5>
+        <h5><a id="email" href="mailto:{{ object.email }}">{{ object.email }}</a></h5>
+    </div>
+    <div>
+        <h3>Projects</h3>
+        <hr/>
+        {% for project in projects %}
+            <a href="{% url 'teamupp:project-details' pk=project.pk %}">
+                <h4>{{ project.name }}</h4>
+                <p>{{ project.start_date | date }}</p>
+                <hr/>
+            </a>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h3>Groups</h3>
+        <hr/>
+        {% for group in groups %}
+            <a href="{% url 'teamupp:group-details' pk=group.pk %}">
+                <h4>{{ group.name }}</h4>
+                <p>{{ group.start_date | date }}</p>
+                <hr/>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

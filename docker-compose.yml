@@ -1,0 +1,31 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: teamup-test
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+    ports:
+    - 5432:5432
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      DJANGO_SECRET_KEY: django-insecure-3tu=w!7_e4&xjx3-w9ibl*&j&n302mn95v&=tl4w_m570v_!%9
+      DATABASE_CONNECTION_ADDRESS: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: teamup-test
+      DATABASE_USERNAME: testuser
+      DATABASE_PASSWORD: testpassword
+    volumes:
+      - .:/code
+      - $HOME/.docker_bash_history:/root/.bash_history
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

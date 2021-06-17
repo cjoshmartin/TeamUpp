@@ -1,2 +1,14 @@
 .idea
 venv/
+*.sqlite3
+
+venv2/
+
+**/__pycache__/
+**/.pytest_cache/
+*.csv
+**/node_modules/
+SE*.json
+.coverage
+htmlcov
+ui-tests/cypress/videos/

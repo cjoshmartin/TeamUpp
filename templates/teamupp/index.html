@@ -1,0 +1,104 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    Home
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+        #projects{
+            margin: 2rem;
+        }
+        #project-background{
+            background: #F5F6F869;
+            height: 80vh;
+            padding: 1rem;
+        }
+        #project-grid{
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 2rem;
+        }
+        .project-card{
+            border: 1px solid lightgray;
+            border-radius: 8px;
+            box-shadow: 0px 4px 4px 0px #00000040;
+            max-width: 766px;
+            background-color: #FFF;
+        }
+        .project-image{
+            margin: 1rem;
+        }
+        .project-content{
+            display: flex;
+            justify-content: space-between;
+        }
+        .project-content-text{
+            margin: 1rem;
+        }
+        .project-content-teammates{
+            display: flex;
+            margin: 1rem;
+            align-content: center;
+            max-width: 25%;
+        }
+        .project-content-teammate{
+            overflow: hidden;
+        }
+        .project-content-teammate:last-child, .project-content-teammate:hover {
+            overflow: visible;
+        }
+
+        .project-content-teammate > img{
+           width: 50px;
+            max-width: 50px;
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content:center;
+            align-items: center;
+        }
+    </style>
+    <script>
+        $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    <a href="/project/create/" class="btn btn-primary btn-lg btn-block">Create New Project </a>
+
+    <div id="projects">
+        <h2>Projects</h2>
+        <div id="project-background">
+        {% if projects %}
+            <div id="project-grid">
+                {% for project in projects %}
+                    <div class="project-card" >
+                        <div class="project-image">
+                            <img alt="project-photo" class="img-thumbnail" src="https://firebasestorage.googleapis.com/v0/b/cjoshmartin-f652e.appspot.com/o/tolepo-mockup.jpg?alt=media&token=55e92c80-3f0b-413c-8d53-de3b93fd6e8f"/>
+                        </div>
+                        <div class="project-content">
+                            <a class="project-content-text" href="/project/{{ project.id }}">
+                                <h4 class="project-name">{{ project.name }}</h4>
+                                <p>{{ project.start_date | date }}</p>
+                            </a>
+                            <div class="project-content-teammates">
+                                {% for participant in project.participants.all %}
+                                    <div class="project-content-teammate" data-toggle="tooltip" data-placement="top" title="@{{ participant.username }}">
+                                        <img class="teammate-image" src="{{participant.profile_picture_url }}&size=50" alt="@{{ participant.username }}" >
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+            </div>
+            {% else %}
+                <h3 align="center"> No Projects...</h3>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

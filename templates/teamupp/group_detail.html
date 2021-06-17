@@ -1,0 +1,42 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    {{ object.name | title }} Group Details
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    <div align="center">
+        <h2>{{ object.name }}</h2>
+
+        <div class="profile-photos">
+            <img src="{{ object.user1.profile_picture_url }}&size=200" />
+            {% if object.user2 is not None %}
+                <img src="{{ object.user2.profile_picture_url }}&size=200" />
+            {% endif %}
+        </div>
+        <h4>
+            <a href="{% url 'teamupp:user-details' pk=object.user1.pk %}">{{ object.user1.username }}</a>
+            {% if object.user2 is not None %}
+                & <a href="{% url 'teamupp:user-details' pk=object.user2.pk %}">{{ object.user2.username }}</a>
+            {% endif %}
+        </h4>
+        <p>Started working on: {{ first_week | date }}</p>
+    </div>
+    <div>
+    <h3>Projects Together</h3>
+    <hr/>
+        {% for project in projects %}
+            <a href="{% url 'teamupp:project-details' pk=project.pk %}">
+            <h4>{{ project.name }}</h4>
+            <p>{{ project.start_date | date }}</p>
+            <hr/>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

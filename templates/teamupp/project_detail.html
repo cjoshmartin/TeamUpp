@@ -1,0 +1,76 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    {{ object.name | title }} Project Details
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+        #project-description{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .project-content-teammates{
+            display: flex;
+        }
+        .project-content-teammate{
+            margin: 0 2px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div id="project-description">
+        <div>
+            <h2 id="project-name">{{ object.name | title}}</h2>
+            <a href="{% url 'teamupp:company-details'  pk=company.pk %}">{{ company.name }}</a>
+            <br/>
+            <span>Project is {{ object.duration}} weeks long</span>
+        </div>
+        <a href="#">Download A CSV Version</a>
+    </div>
+    <div>
+<div class="project-content-teammates">
+<p>Teammates:</p>
+{% for participant in object.participants.all %}
+    <div class="project-content-teammate">
+        <a href="{% url 'teamupp:user-details' pk=participant.pk %}">@{{ participant.username }}</a>
+    </div>
+{% endfor %}
+</div>
+    </div>
+    <br/>
+    <table class="table" >
+    <tr>
+        <th> </th>
+        {% for group_header in groups_headers %}
+        <th class="group-header">Group #{{ group_header | add:"1"}}</th>
+        {% endfor %}
+    </tr>
+        {% for i, week in weeks %}
+            <tr>
+            <th class="week-header" scope="row">
+                <p>Week {{ i | add:'1'}}</p>
+                <small>({{ week.start | date }} - {{ week.end | date }})</small>
+            </th>
+                {% for group in week.groups.all %}
+                    <td>
+                    <div class="profile-photos">
+                        <img src="{{ group.user1.profile_picture_url }}&size=50" />
+                        {% if group.user2 is not None %}
+                            <img src="{{ group.user2.profile_picture_url }}&size=50" />
+                        {% endif %}
+                    </div>
+                        {{ group.user1.username }}
+                        {% if group.user2 is not None %}
+                           & {{ group.user2.username }}
+                        {% endif %}
+                    <br />
+                        (<a href="{% url  'teamupp:group-details' pk=group.pk %}">{{ group.name }}</a>)
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    {{ object.name | title }} (Company Details)
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+    <div align="center">
+        <h2>{{ object.name }}</h2>
+    </div>
+
+    <div>
+        <h3>Employees</h3>
+        <hr/>
+        {% for employee in users %}
+            <a href="{% url 'teamupp:user-details' pk=employee.pk %}">
+                <h4>@{{ employee.username }}</h4>
+                <p>{{ employee.email }}</p>
+                <hr/>
+            </a>
+        {% endfor %}
+    </div>
+    <div>
+        <h3>Projects</h3>
+        <hr/>
+        {% for project in projects %}
+            <a href="{% url 'teamupp:project-details' pk=project.pk %}">
+                <h4>{{ project.name }}</h4>
+                <p>{{ project.start_date | date }}</p>
+                <hr/>
+            </a>
+        {% endfor %}
+    </div>
+
+    <div>
+        <h3>Groups</h3>
+        <hr/>
+        {% for group in groups %}
+            <a href="{% url 'teamupp:group-details' pk=group.pk %}">
+                <h4>{{ group.name }}</h4>
+                <p>{{ group.start_date | date }}</p>
+                <hr/>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

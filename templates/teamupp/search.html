@@ -1,0 +1,107 @@
+{% extends 'base_templete.html' %}
+{% block title  %}
+    Home
+{% endblock %}
+
+{% block add_to_head %}
+    <style>
+        .search-results{
+            margin: 1rem;
+        }
+        .search-results > h3{
+            margin-bottom: 1rem;
+
+        }
+        .search-result{
+            border: 1px solid lightgray;
+            padding: 1rem;
+        }
+        .search-content-teammates{
+            display: flex;
+        }
+        .search-content-teammate{
+            margin:  .5rem;
+            padding: 0;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <h2>Search Results</h2>
+    <hr />
+
+    <div class="search-results">
+        <h3>Project Results</h3>
+        {% for project in project_search_results %}
+            <div class="search-result">
+                <a class="search-content-text" href="/project/{{ project.id }}">
+                    <h4>{{ project.name }}</h4>
+                    <p>{{ project.start_date | date }}</p>
+                </a>
+                <div class="search-content-teammates">
+                    {% for participant in project.participants.all %}
+                        <div class="search-content-teammate">
+                            <a href="{% url 'teamupp:user-details' pk=participant.pk %}">@{{ participant.username }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="search-result">  No Projects found...</div>
+        {% endfor %}
+    </div>
+
+    <div class="search-results">
+        <h3>Group Results</h3>
+    {% for group in  group_search_results %}
+
+        <div class="search-result">
+            <a class="search-content-text" href="{% url 'teamupp:group-details' pk=group.pk %}">
+                <h4>{{ group.name }}</h4>
+            </a>
+        <div class="search-content-teammates">
+           <div class="search-content-teammate">
+               <a href="{% url 'teamupp:user-details'  pk=group.user1.pk %}">@{{ group.user1.username }}</a>
+           </div>
+            {% if group.user2 %}
+            <div class="search-content-teammate">
+                <a href="{% url 'teamupp:user-details'  pk=group.user2.pk %}">@{{ group.user2.username }}</a>
+            </div>
+            {% endif %}
+        </div>
+        </div>
+        {% empty %}
+        <div class="search-result">No Group Results</div>
+    {% endfor %}
+    </div>
+
+    <div class="search-results">
+        <h3>User Results</h3>
+        {% for user in  user_search_results %}
+            <div class="search-result">
+                <div class="search-content-text">
+                    <a href="{% url 'teamupp:user-details'  pk=user.pk %}">
+                    <h4>@{{ user.username }}</h4>
+                    <p>{{ user.email }}</p>
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="search-result">No User Results</div>
+        {% endfor %}
+    </div>
+
+    <div class="search-results">
+        <h3>Company Results</h3>
+        {% for company in  company_search_results %}
+            <div class="search-result">
+                <div class="search-content-text">
+                    <h4><a href="{% url 'teamupp:company-details'  pk=company.pk %}">{{ company.name }}</a></h4>
+                </div>
+            </div>
+        {% empty %}
+            <div class="search-result">No Company Results</div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base_templete.html' %}
+{% block title %}
+    Invite A Teammate
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+    <h2>Invite A Teammate</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form | crispy}}
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+
+{% endblock %}
