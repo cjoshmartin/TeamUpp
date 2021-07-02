@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   db:
+    container_name: teamup_db
     image: postgres:13
     environment:
       POSTGRES_DB: teamup-test
@@ -11,6 +12,7 @@ services:
     - 5432:5432
 
   web:
+    container_name: teamup_web
     build:
       context: .
       dockerfile: Dockerfile

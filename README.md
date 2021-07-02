@@ -12,7 +12,7 @@ docker-compose build
 docker-compose up -d
 
 # migrate database and setup for use
-docker exec -it [project folder name]_web_1 python ./manage.py migrate
+docker exec -it teamup_web python ./manage.py migrate
 ```
 
 ## Design Documents
@@ -28,7 +28,7 @@ you can also set passwords on the User models
 # start the database and server in the background
 docker-compose up -d
 
- docker exec -it [project folder's name]_web_1 python manage.py createsuperuser
+ docker exec -it teamup_web python manage.py createsuperuser
 
 ```
 
@@ -44,9 +44,9 @@ docker-compose down
 docker-compose up -d db
 
 #drop and recreate database
-docker exec -it [project folder's name]_db_1 psql -U wisher -d postgres -c "DROP DATABASE productiondb1;"
-docker exec -it [project folder's name]_db_1 psql -U wisher -d postgres -c "CREATE DATABASE productiondb1;"
-docker exec -it [project folder name]_web_1 python ./manage.py migrate
+docker exec -it teamup_db psql -U wisher -d postgres -c "DROP DATABASE productiondb1;"
+docker exec -it teamup_db psql -U wisher -d postgres -c "CREATE DATABASE productiondb1;"
+docker exec -it teamup_web python ./manage.py migrate
 
 ```
 ### Checking Logs
@@ -60,7 +60,7 @@ Sometimes the database starts after the webserver causing the webserver to crash
 # Start the database and server in the background
 docker-compose up -d
 
-docker exec -it [project folder name]_web_1 pytest --cov=. --cov-report html app/tests/
+docker exec -it teamup_web pytest --cov=. --cov-report html app/tests/
 
 docker-compose down
 ```
