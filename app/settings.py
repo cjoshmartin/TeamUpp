@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-3tu=w!7_e4&xjx3-w9ibl*&j&n302mn95v&=tl4w_m570v_!%9")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if not os.getenv("IS_PRODUCTION", None) else False
@@ -75,17 +75,30 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ['DATABASE_CONNECTION_ADDRESS'],
-        'PORT': os.environ['DATABASE_PORT'],
-        'NAME': os.environ['DATABASE_NAME'],
-        'USER': os.environ['DATABASE_USERNAME'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
+if not os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'HOST': os.getenv('DATABASE_CONNECTION_ADDRESS'),
+            'PORT': os.environ['DATABASE_PORT'],
+            'NAME': os.environ['DATABASE_NAME'],
+            'USER': os.environ['DATABASE_USERNAME'],
+            'PASSWORD': os.environ['DATABASE_PASSWORD'],
+        }
+
+    }
+if os.environ.get('GITHUB_WORKFLOW'):
+    DATABASES = {
+        'default': {
+           'ENGINE': 'django.db.backends.postgresql',
+           'NAME': 'teamup-test',
+           'USER': 'testuser',
+           'PASSWORD': 'testpassword',
+           'HOST': '0.0.0.0',
+           'PORT': '5432',
+        }
     }
 
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

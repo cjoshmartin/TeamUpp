@@ -46,11 +46,11 @@ jobs:
                 pip install flake8 pytest
                 pip install -r requirements.txt
           - name: Run Server
-            run: ptyhon ./manage.py runserver &
+            run: python ./manage.py runserver &
           - name: Cypress running
             uses: actions/setup-node@v2
           - name: Install
             run: cd ui-tests/; npm i
           - name: Run
-            run: $(npm bin)/cypress run
+            run: cd ui-tests/; $(npm bin)/cypress run
 
