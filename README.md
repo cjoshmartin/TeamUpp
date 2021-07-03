@@ -1,5 +1,7 @@
 # TeamUpp 
 
+[![Unit and E2E Tests](https://github.com/cjoshmartin/TeamUpp/actions/workflows/actions.yml/badge.svg)](https://github.com/cjoshmartin/TeamUpp/actions/workflows/actions.yml)
+
 ## Prerequisites 
 
 * Docker: https://docs.docker.com/get-docker/
