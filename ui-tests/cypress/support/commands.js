@@ -28,7 +28,7 @@ Cypress.Commands.add('register', (email, username, password)=>{
     cy.visit('/accounts/register/')
     cy.get('input[name="email"]').type(email)
     cy.get('input[name="username"]').type(username)
-    cy.get('select').select('[Default Company]')
+    // cy.get('select').select('[Default Company]')
     cy.get('input[name="password1"]').type(password)
     cy.get('input[name="password2"]').type(password)
     cy.get('form').submit()
