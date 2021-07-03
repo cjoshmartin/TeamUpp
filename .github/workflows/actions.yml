@@ -32,10 +32,11 @@ jobs:
             run: cd ui-tests/; npm i
           - name: Run
             run: cd ui-tests/; $(npm bin)/cypress run
-#         - name: Archive Cypress results
-#           uses: actions/upload-artifact@v2
-#           with:
-#             name: code-coverage-report
-#             path: ui-tests/cypress/videos
-##             retention-days: 1
+          - name: Archive Cypress results
+            if: ${{ always() }}
+            uses: actions/upload-artifact@v2
+            with:
+              name: code-coverage-report
+              path: ui-tests/cypress/videos
+              retention-days: 1
 
