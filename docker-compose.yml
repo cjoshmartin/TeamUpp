@@ -8,6 +8,11 @@ services:
       POSTGRES_DB: teamup-test
       POSTGRES_USER: testuser
       POSTGRES_PASSWORD: testpassword
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U testuser" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
     - 5432:5432
 

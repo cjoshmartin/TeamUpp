@@ -25,7 +25,7 @@ jobs:
     steps:
           - uses: actions/checkout@v2
           - name: Run Server
-            run: docker-compose up -d
+            run: docker-compose up -d; docker exec -i teamup_web python ./manage.py migrate
           - name: Cypress running
             uses: actions/setup-node@v2
           - name: Install
