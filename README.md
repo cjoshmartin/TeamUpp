@@ -44,8 +44,8 @@ docker-compose down
 docker-compose up -d db
 
 #drop and recreate database
-docker exec -it teamup_db psql -U wisher -d postgres -c "DROP DATABASE productiondb1;"
-docker exec -it teamup_db psql -U wisher -d postgres -c "CREATE DATABASE productiondb1;"
+docker exec -it teamup_db psql -U testuser -d postgres -c "DROP DATABASE productiondb1;"
+docker exec -it teamup_db psql -U testuser -d postgres -c "CREATE DATABASE productiondb1;"
 docker exec -it teamup_web python ./manage.py migrate
 
 ```
