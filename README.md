@@ -60,7 +60,7 @@ Sometimes the database starts after the webserver causing the webserver to crash
 # Start the database and server in the background
 docker-compose up -d
 
-docker exec -it teamup_web pytest --cov=. --cov-report html app/tests/
+docker exec -it teamup_web pytest --cov=. --cov-report=html app/tests/
 
 docker-compose down
 ```

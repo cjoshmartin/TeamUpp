@@ -1,18 +1,50 @@
 name: Testing
 
-on: push
+on: [push]
 
 jobs:
+  unit-tests: 
+      name: Unit testing
+      runs-on: ubuntu-latest
+      steps:
+          - uses: actions/checkout@v2
+          - name: Unit Tests
+            uses: actions/setup-python@v2
+            with:
+                python-version: 3.8
+          - name: Install dependencies
+            run: |
+                python -m pip install --upgrade pip
+                pip install flake8 pytest
+                pip install -r requirements.txt
+          - name: Run Tests
+            run: pytest --cov=. --cov-report=html app/tests/
+          - name: Unit test code coverage
+            if: ${{ always() }}
+            uses: actions/upload-artifact@v2
+            with:
+              name:  unit-test-code-coverage
+              path:  htmlcov
+              retention-days: 1
 
-  build:
-
+  ui-testing:
+    name: UI Tests
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Unit Tests
-      run: docker-compose -d
-      run: docker exec -it teamup_web pytest --cov=. --cov-report html app/tests/
-    - name: Cypress Tests
-      run: docker-compose -d
-      run: cd ui-tests/; npm i && $(npm bin)/cypress run
+          - uses: actions/checkout@v2
+          - name: Run Server
+            run: docker-compose up -d; docker exec -i teamup_web python ./manage.py migrate
+          - name: Cypress running
+            uses: actions/setup-node@v2
+          - name: Install
+            run: cd ui-tests/; npm i
+          - name: Run
+            run: cd ui-tests/; $(npm bin)/cypress run
+          - name: Archive Cypress results
+            if: ${{ always() }}
+            uses: actions/upload-artifact@v2
+            with:
+              name: cypress-video-recordings
+              path: ui-tests/cypress/videos
+              retention-days: 1
+
