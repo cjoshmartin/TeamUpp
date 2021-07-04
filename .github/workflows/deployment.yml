@@ -13,6 +13,7 @@ env:
   GCP_BUCKET_ID: ${{ secrets.GCP_BUCKET_ID }}  
   IMAGE: teamupp
   GCP_REGION: us-central1
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
 jobs:
   deploy:
