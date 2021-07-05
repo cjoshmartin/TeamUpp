@@ -11,7 +11,7 @@ name: Build and Deploy to Google Cloud
 env:
   GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
   GCP_BUCKET_ID: ${{ secrets.GCP_BUCKET_ID }} 
-  IMAGE: octochat
+  IMAGE: teamupp-master
   GCP_REGION: us-central1
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
@@ -28,9 +28,9 @@ jobs:
     - name: Configure Google Cloud credentials
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.1
       with:
-        version: 275.0.0
         service_account_email: ${{ secrets.GCP_EMAIL }}
         service_account_key: ${{ secrets.GCP_KEY }}
+        export_default_credentials: true
 
     # Set up Docker
     - run: |
