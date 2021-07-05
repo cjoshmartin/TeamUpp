@@ -32,27 +32,22 @@ jobs:
         service_account_key: ${{ secrets.GCP_KEY }}
         export_default_credentials: true
 
-    # Set up Docker
-    - run: |
-        gcloud auth configure-docker
-    # Build the Docker image
-    - name: Build
-      run: |        
-        docker build -t gcr.io/"$GCP_PROJECT"/"$IMAGE":"$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
-    # Push the Docker image to Google Container Registry
-    - name: Publish
+    # Configure Docker with Credentials
+    - name: Configure Docker
       run: |
-        docker push gcr.io/$GCP_PROJECT/$IMAGE:$GITHUB_SHA
-    # Deploy to Google Cloud Run
+        gcloud auth configure-docker
+      
+    # Build the Docker image
+    - name: Build & Publish
+      run: |
+        gcloud config set project $GCP_PROJECT
+        gcloud builds submit --tag gcr.io/$GCP_PROJECT/$IMAGE
+        gcloud config set run/region us-central1
+      
+    # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |
-        gcloud run deploy $IMAGE \
-          --service-account ${{ secrets.GCP_EMAIL }} \
-          --project $GCP_PROJECT \
-          --image gcr.io/$GCP_PROJECT/$IMAGE:$GITHUB_SHA \
-          --platform managed \
-          --region $GCP_REGION \
-          --set-env-vars "APP_ID=berglas://${GCP_BUCKET_ID}/app_id,CLIENT_ID=berglas://${GCP_BUCKET_ID}/client_id,CLIENT_SECRET=berglas://${GCP_BUCKET_ID}/client_secret,SESSION_STORE_SECRET=berglas://${GCP_BUCKET_ID}/session_store,REDIRECT_URI=berglas://${GCP_BUCKET_ID}/redirect_uri" \
-          --allow-unauthenticated
+        gcloud run deploy $IMAGE --image gcr.io/$GCP_PROJECT/$IMAGE \
+        --platform managed \
+        --allow-unauthenticated \
+        --memory 512M
