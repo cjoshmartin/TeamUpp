@@ -34,7 +34,8 @@ jobs:
 
     # Configure Docker with Credentials
     - name: Configure Docker
-      run: yes | gcloud auth configure-docker
+      run:  |
+        gcloud auth configure-docker --quiet
       
     # Build the Docker image
     - name: Build & Publish
