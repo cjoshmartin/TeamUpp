@@ -35,6 +35,7 @@ jobs:
     # Configure Docker with Credentials
     - name: Configure Docker
       run: |
+        gcloud auth activate-service-account ${{ secrets.GCP_EMAIL }} --key-file=${{ secrets.GCP_KEY }}
         gcloud auth configure-docker
       
     # Build the Docker image
