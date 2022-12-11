@@ -1,0 +1,53 @@
+# https://github.com/github-developer/octochat-gcp/blob/main/.github/workflows/deploy.yml
+# https://resources.github.com/webcasts/Automating-CI-CD-Actions-Google-Cloud-thankyou/
+
+on:
+  push:
+    branches:
+      - main
+
+name: Build and Deploy to Google Cloud
+
+env:
+  GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+  GCP_BUCKET_ID: ${{ secrets.GCP_BUCKET_ID }} 
+  IMAGE: teamupp-master
+  GCP_REGION: us-central1
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    # Authenticate with gcloud credentials 
+    - name: Configure Google Cloud credentials
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.1
+      with:
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_KEY }}
+        export_default_credentials: true
+
+    # Configure Docker with Credentials
+    - name: Configure Docker
+      run:  |
+        gcloud auth configure-docker --quiet
+      
+    # Build the Docker image
+    - name: Build & Publish
+      run: |
+        gcloud config set project $GCP_PROJECT
+        gcloud builds submit --tag gcr.io/$GCP_PROJECT/$IMAGE
+        gcloud config set run/region us-central1
+      
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy
+      run: |
+        gcloud run deploy $IMAGE --image gcr.io/$GCP_PROJECT/$IMAGE \
+        --platform managed \
+        --allow-unauthenticated \
+        --memory 512M
